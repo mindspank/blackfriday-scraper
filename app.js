@@ -56,6 +56,7 @@ function getStoreDeals(stores) {
 			};
 
 			var pages = +$('.pagination li a').last().text();
+			var storeHours = $('span.time').text();
 
 			async.each(_.range(1,pages+1), function(page, cb) {
 				request(BASEURL + store.url + '?page=' + page, function(err, res, body) {
@@ -70,13 +71,13 @@ function getStoreDeals(stores) {
 								store: store.name,
 								category: cat,
 								product: $$(val).text(),
-								price: $$(val).parent().next().find('.hd-price-item').text()
+								price: $$(val).parent().next().find('.hd-price-item').text(),
+								storehours: storeHours
 							};
 							connection.query('INSERT INTO deals SET ?', deal)
 						})
 					});
 					cb();
-
 				});
 			}, function(err) {
 				console.log('Done loading deals from ' + store.name);
